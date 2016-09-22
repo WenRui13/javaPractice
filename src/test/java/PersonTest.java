@@ -63,7 +63,7 @@ public class PersonTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        System.out.println("************************************************************************");
+        System.out.println("*******************************¿ªÊ¼²âÊÔ*****************************************");
 
     }
 }
