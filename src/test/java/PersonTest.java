@@ -1,4 +1,5 @@
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
@@ -12,8 +13,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by yfxuxiaojun on 2016/9/21.
@@ -23,7 +23,7 @@ public class PersonTest {
     public void test1() throws Exception {
         BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            for (PropertyDescriptor propertyDescriptor :
+        for (PropertyDescriptor propertyDescriptor :
                 propertyDescriptors) {
             System.out.println(propertyDescriptor.getName());
         }
@@ -44,7 +44,7 @@ public class PersonTest {
     @Test(description = "通过BeanUtils设置bean的属性")
     public void test3() throws Exception {
         Person p = new Person();
-        BeanUtils.setProperty(p,"name","许小军");
+        BeanUtils.setProperty(p, "name", "许小军");
         System.out.println(p.getName());
 
     }
@@ -69,23 +69,77 @@ public class PersonTest {
     public void test5() throws Exception {
         ConvertUtils.register(new Converter() {
             public Object convert(Class type, Object value) {
-                if (!(value instanceof String)) throw new RuntimeException("传入的不是字符串");
-                if (((String) value).trim().equals("")) throw new RuntimeException("传入的字符串为空");
+                if (value == null) {
+                    return null;
+                }
+                if (!(value instanceof String)) {
+                    throw new ConversionException("传入的不是字符串");
+                }
+                if (((String) value).trim().equals("")) {
+                    return null;
+                }
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 try {
                     Date date = df.parse((String) value);
                     return date;
                 } catch (ParseException e) {
-                    throw new RuntimeException("格式不符合，转型失败");
+                    throw new RuntimeException(e);
                 }
 
             }
-        },Date.class);
+        }, Date.class);
 
         Person p = new Person();
-        BeanUtils.setProperty(p,"name","许小军");
-        BeanUtils.setProperty(p,"birthday","1990-10-5");
+        BeanUtils.setProperty(p, "name", "许小军");
+        BeanUtils.setProperty(p, "birthday", "564654656");
         System.out.println(p);
+
+    }
+
+    @Test(description = "测试Map.entrySet()")
+    public void test6() throws Exception {
+        HashMap<Integer, String> map = new HashMap<Integer, String>();
+        map.put(1, "one");
+        map.put(2, "two");
+        map.put(3, "three");
+        map.put(4, "four");
+
+        Set<Map.Entry<Integer, String>> set = map.entrySet();
+        Iterator<Map.Entry<Integer, String>> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, String> entry = iterator.next();
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+
+    }
+
+
+    @Test(description = "测试自定义泛型方法")
+    public void test7() throws Exception {
+        String[] str = new String[]{"1111","2222","3333"};
+        reverse(str);
+
+        System.out.println(Arrays.toString(str));
+
+    }
+
+    public <T> void reverse(T arr[]) {
+        int start = 0;
+        int end = arr.length - 1;
+
+
+        while (true) {
+
+            if (start >= end) {
+                break;
+            }
+            T temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+
+            start++;
+            end--;
+        }
 
     }
 
