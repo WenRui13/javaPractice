@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -91,7 +92,7 @@ public class PersonTest {
 
         Person p = new Person();
         BeanUtils.setProperty(p, "name", "许小军");
-        BeanUtils.setProperty(p, "birthday", "564654656");
+        BeanUtils.setProperty(p, "birthday", "1999-9-9");
         System.out.println(p);
 
     }
@@ -116,7 +117,7 @@ public class PersonTest {
 
     @Test(description = "测试自定义泛型方法")
     public void test7() throws Exception {
-        String[] str = new String[]{"1111","2222","3333"};
+        String[] str = new String[]{"1111", "2222", "3333"};
         reverse(str);
 
         System.out.println(Arrays.toString(str));
@@ -141,6 +142,47 @@ public class PersonTest {
             end--;
         }
 
+    }
+
+    @Test(description = "文件读写测试")
+    public void test8() throws Exception {
+        HashMap<Integer, String> map = new HashMap<Integer, String>();
+        map.put(1, "one");
+        map.put(2, "two");
+        map.put(3, "three");
+        map.put(4, "four");
+
+        File file = new File("./map.txt");
+        writeMapToFile(map, file);
+        printFile(file);
+    }
+
+    private void printFile(File file) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line = br.readLine();
+        while (line != null) {
+            System.out.println(line);
+            line = br.readLine();
+        }
+
+        br.close();
+
+    }
+
+    private void writeMapToFile(HashMap<Integer, String> map, File file) throws IOException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        Set<Map.Entry<Integer, String>> entrySet = map.entrySet();
+
+        Iterator<Map.Entry<Integer, String>> iterator = entrySet.iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, String> entry = iterator.next();
+
+            bw.write(entry.getKey() + "=" + entry.getValue());
+            bw.newLine();
+        }
+
+        bw.close();
     }
 
     @BeforeMethod
