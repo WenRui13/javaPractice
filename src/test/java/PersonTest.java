@@ -183,12 +183,6 @@ public class PersonTest {
 
     }
 
-    @Test
-    public void test14() throws Exception {
-        System.out.println("hello!");
-    }
-
-
 
 
 
