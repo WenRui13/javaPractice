@@ -162,6 +162,11 @@ public class PersonTest {
         System.out.println(String.valueOf(22));
     }
 
+    @Test(description = "test10")
+    public void test10() throws Exception {
+
+    }
+
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();
