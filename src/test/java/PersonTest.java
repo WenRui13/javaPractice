@@ -157,6 +157,11 @@ public class PersonTest {
         printFile(file);
     }
 
+    @Test(description = "≤‚ ‘")
+    public void test9() throws Exception {
+        System.out.println(String.valueOf(22));
+    }
+
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();
