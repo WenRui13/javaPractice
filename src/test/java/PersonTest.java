@@ -167,17 +167,6 @@ public class PersonTest {
 
     }
 
-    @Test
-    public void test11() throws Exception {
-
-    }
-
-
-
-
-
-
-
 
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
