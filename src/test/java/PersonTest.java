@@ -198,10 +198,7 @@ public class PersonTest {
 
     }
 
-    @Test
-    public void test17() throws Exception {
 
-    }
 
 
     private void printFile(File file) throws IOException {
