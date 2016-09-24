@@ -188,12 +188,6 @@ public class PersonTest {
         System.out.println("hello!");
     }
 
-    @Test
-    public void test15() throws Exception {
-
-    }
-
-
 
 
 
