@@ -20,7 +20,7 @@ import java.util.*;
  * Created by yfxuxiaojun on 2016/9/21.
  */
 public class PersonTest {
-    @Test(description = "Í¨¹ıÄÚÊ¡¶ÁÊôĞÔ")
+    @Test(description = "é€šè¿‡å†…çœè¯»å±æ€§")
     public void test1() throws Exception {
         BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -30,7 +30,7 @@ public class PersonTest {
         }
     }
 
-    @Test(description = "Í¨¹ıÊôĞÔÃèÊöÆ÷¶ÁĞ´ÊôĞÔ")
+    @Test(description = "é€šè¿‡å±æ€§æè¿°å™¨è¯»å†™å±æ€§")
     public void test2() throws Exception {
         Person p = new Person();
         PropertyDescriptor propertyDescriptor = new PropertyDescriptor("age", Person.class);
@@ -42,20 +42,20 @@ public class PersonTest {
 
     }
 
-    @Test(description = "Í¨¹ıBeanUtilsÉèÖÃbeanµÄÊôĞÔ")
+    @Test(description = "é€šè¿‡BeanUtilsè®¾ç½®beançš„å±æ€§")
     public void test3() throws Exception {
         Person p = new Person();
-        BeanUtils.setProperty(p, "name", "ĞíĞ¡¾ü");
+        BeanUtils.setProperty(p, "name", "è®¸å°å†›");
         System.out.println(p.getName());
 
     }
 
-    @Test(description = "Í¨¹ıBeanUtils°Ñ±íµ¥mapÌî³äBeanµÄÊôĞÔ£¬Ìî³ä·Ç»ù±¾ÀàĞÍµÄÊôĞÔ£¬ĞèÒª×¢²á×ª»»Æ÷")
+    @Test(description = "é€šè¿‡BeanUtilsæŠŠè¡¨å•mapå¡«å……Beançš„å±æ€§ï¼Œå¡«å……éåŸºæœ¬ç±»å‹çš„å±æ€§ï¼Œéœ€è¦æ³¨å†Œè½¬æ¢å™¨")
     public void test4() throws Exception {
         Person p = new Person();
 
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("name", "ÕÅÈı");
+        map.put("name", "å¼ ä¸‰");
         map.put("age", "30");
         map.put("birthday", "1980-10-15");
 
@@ -66,7 +66,7 @@ public class PersonTest {
         System.out.println(p);
     }
 
-    @Test(description = "×¢²á×ª»»Æ÷£¬×ª»»ÒıÓÃÀàĞÍÊı¾İ")
+    @Test(description = "æ³¨å†Œè½¬æ¢å™¨ï¼Œè½¬æ¢å¼•ç”¨ç±»å‹æ•°æ®")
     public void test5() throws Exception {
         ConvertUtils.register(new Converter() {
             public Object convert(Class type, Object value) {
@@ -74,7 +74,7 @@ public class PersonTest {
                     return null;
                 }
                 if (!(value instanceof String)) {
-                    throw new ConversionException("´«ÈëµÄ²»ÊÇ×Ö·û´®");
+                    throw new ConversionException("ä¼ å…¥çš„ä¸æ˜¯å­—ç¬¦ä¸²");
                 }
                 if (((String) value).trim().equals("")) {
                     return null;
@@ -91,13 +91,13 @@ public class PersonTest {
         }, Date.class);
 
         Person p = new Person();
-        BeanUtils.setProperty(p, "name", "ĞíĞ¡¾ü");
+        BeanUtils.setProperty(p, "name", "è®¸å°å†›");
         BeanUtils.setProperty(p, "birthday", "1999-9-9");
         System.out.println(p);
 
     }
 
-    @Test(description = "²âÊÔMap.entrySet()")
+    @Test(description = "æµ‹è¯•Map.entrySet()")
     public void test6() throws Exception {
         HashMap<Integer, String> map = new HashMap<Integer, String>();
         map.put(1, "one");
@@ -115,7 +115,7 @@ public class PersonTest {
     }
 
 
-    @Test(description = "²âÊÔ×Ô¶¨Òå·ºĞÍ·½·¨")
+    @Test(description = "æµ‹è¯•è‡ªå®šä¹‰æ³›å‹æ–¹æ³•")
     public void test7() throws Exception {
         String[] str = new String[]{"1111", "2222", "3333"};
         reverse(str);
@@ -144,7 +144,7 @@ public class PersonTest {
 
     }
 
-    @Test(description = "ÎÄ¼ş¶ÁĞ´²âÊÔ")
+    @Test(description = "æ–‡ä»¶è¯»å†™æµ‹è¯•")
     public void test8() throws Exception {
         HashMap<Integer, String> map = new HashMap<Integer, String>();
         map.put(1, "one");
@@ -157,7 +157,7 @@ public class PersonTest {
         printFile(file);
     }
 
-    @Test(description = "²âÊÔ")
+    @Test(description = "æµ‹è¯•")
     public void test9() throws Exception {
         System.out.println(String.valueOf(22));
     }
@@ -169,6 +169,17 @@ public class PersonTest {
 
     @Test
     public void test11() throws Exception {
+
+    }
+
+    @Test
+    public void test13() throws Exception {
+
+    }
+
+    @Test
+    public void test12() throws Exception {
+
 
     }
 
@@ -202,7 +213,7 @@ public class PersonTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        System.out.println("*******************************¿ªÊ¼²âÊÔ*****************************************");
+        System.out.println("*******************************å¼€å§‹æµ‹è¯•*****************************************");
 
     }
 }
