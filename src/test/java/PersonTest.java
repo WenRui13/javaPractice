@@ -164,7 +164,6 @@ public class PersonTest {
 
     @Test(description = "test10")
     public void test10() throws Exception {
-        System.out.println();
         BeanUtils.populate(new Person(),new HashMap());
     }
 
