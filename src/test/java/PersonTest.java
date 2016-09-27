@@ -5,9 +5,6 @@ import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import sun.java2d.pipe.ShapeSpanIterator;
-import sun.org.mozilla.javascript.internal.ast.ForLoop;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -86,8 +83,7 @@ public class PersonTest {
                 }
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 try {
-                    Date date = df.parse((String) value);
-                    return date;
+                    return df.parse((String) value);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -111,9 +107,7 @@ public class PersonTest {
         map.put(4, "four");
 
         Set<Map.Entry<Integer, String>> set = map.entrySet();
-        Iterator<Map.Entry<Integer, String>> iterator = set.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, String> entry = iterator.next();
+        for (Map.Entry<Integer, String> entry : set) {
             System.out.println(entry.getKey() + ":" + entry.getValue());
         }
 
@@ -225,9 +219,8 @@ public class PersonTest {
     }
 
     private<T extends Collection> void pritSetElements(T t) {
-        Iterator iterator = t.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
+        for (Object aT : t) {
+            System.out.println(aT);
         }
     }
 
@@ -261,11 +254,7 @@ public class PersonTest {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         Set<Map.Entry<Integer, String>> entrySet = map.entrySet();
 
-        Iterator<Map.Entry<Integer, String>> iterator = entrySet.iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, String> entry = iterator.next();
-
+        for (Map.Entry<Integer, String> entry : entrySet) {
             bw.write(entry.getKey() + "=" + entry.getValue());
             bw.newLine();
         }
