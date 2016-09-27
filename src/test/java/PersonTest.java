@@ -5,7 +5,12 @@ import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import sun.java2d.pipe.ShapeSpanIterator;
+import sun.org.mozilla.javascript.internal.ast.ForLoop;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -167,6 +172,77 @@ public class PersonTest {
         BeanUtils.populate(new Person(),new HashMap());
     }
 
+    @Test
+    public void test11() throws Exception {
+        System.out.println("第十一个测试用例");
+
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+    }
+
+    @Test(description = "测试枚举类型的values返回枚举数组")
+    public void test12() throws Exception {
+        for (ColorEnum color : ColorEnum.values()) {
+            System.out.println(color);
+        }
+
+        System.out.println(Enum.valueOf(ColorEnum.class, "GREEN"));
+    }
+
+    @Test(description = "测试枚举工具类EnumSet的使用")
+    public void test13() throws Exception {
+        System.out.println("====allOf(Class<E> elementType)=====");
+        EnumSet<ColorEnum> set = EnumSet.allOf(ColorEnum.class);
+        pritSetElements(set);
+
+        System.out.println("====noneOf(Class<E> elementType)=====");
+        EnumSet<ColorEnum> set1 = EnumSet.noneOf(ColorEnum.class);
+        set1.addAll(set);
+        pritSetElements(set1);
+
+        System.out.println("===clone()======");
+        EnumSet<ColorEnum> clone = set.clone();
+        pritSetElements(clone);
+
+        System.out.println("====complementOf(EnumSet<E> s)=====");
+        EnumSet<ColorEnum> coldColor = EnumSet.of(ColorEnum.BLUE, ColorEnum.GREEN);
+        EnumSet<ColorEnum> noColdColor = EnumSet.complementOf(coldColor);
+        pritSetElements(noColdColor);
+
+        System.out.println("====range(E from, E to)=====");
+        EnumSet<ColorEnum> range = EnumSet.range(ColorEnum.RED, ColorEnum.BLUE);
+        pritSetElements(range);
+
+        System.out.println("====copyOf(EnumSet<E> s)=====");
+        EnumSet<ColorEnum> copyOf = EnumSet.copyOf(set);
+        pritSetElements(copyOf);
+
+        System.out.println("====copyOf(Collection<E> c)=====");
+        List<ColorEnum> list = Arrays.asList(ColorEnum.values());
+        EnumSet<ColorEnum> copyOf1 = EnumSet.copyOf(list);
+        pritSetElements(copyOf1);
+
+    }
+
+    private<T extends Collection> void pritSetElements(T t) {
+        Iterator iterator = t.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+    }
+
+    @Test(description = "测试枚举工具类EnumMap")
+    public void test14() throws Exception {
+        EnumMap<ColorEnum, String> enumMap = new EnumMap<ColorEnum, String>(ColorEnum.class);
+        enumMap.put(ColorEnum.RED, "红色");
+        enumMap.put(ColorEnum.BLUE, "蓝色");
+        enumMap.put(ColorEnum.GREEN, "绿色");
+
+        for (ColorEnum color : ColorEnum.values()) {
+            System.out.println(enumMap.get(color));
+        }
+
+    }
 
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -175,6 +251,7 @@ public class PersonTest {
             System.out.println(line);
             line = br.readLine();
         }
+
 
         br.close();
 
