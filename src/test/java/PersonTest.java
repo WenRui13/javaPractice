@@ -5,7 +5,11 @@ import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -164,9 +168,18 @@ public class PersonTest {
 
     @Test(description = "test10")
     public void test10() throws Exception {
-        BeanUtils.populate(new Person(),new HashMap());
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        documentBuilderFactory.setIgnoringComments(true);
+        InputSource inputSource = new InputSource("./pom.xml");
+        Document document = documentBuilder.parse(inputSource);
+        System.out.println(document.getLocalName());
     }
 
+    @Test
+    public void test11() throws Exception {
+
+    }
 
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
