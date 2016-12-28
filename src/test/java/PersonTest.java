@@ -5,8 +5,6 @@ import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -85,8 +83,7 @@ public class PersonTest {
                 }
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 try {
-                    Date date = df.parse((String) value);
-                    return date;
+                    return df.parse((String) value);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -110,9 +107,7 @@ public class PersonTest {
         map.put(4, "four");
 
         Set<Map.Entry<Integer, String>> set = map.entrySet();
-        Iterator<Map.Entry<Integer, String>> iterator = set.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, String> entry = iterator.next();
+        for (Map.Entry<Integer, String> entry : set) {
             System.out.println(entry.getKey() + ":" + entry.getValue());
         }
 
@@ -168,16 +163,77 @@ public class PersonTest {
 
     @Test(description = "test10")
     public void test10() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        documentBuilderFactory.setIgnoringComments(true);
-        InputSource inputSource = new InputSource("./pom.xml");
-        Document document = documentBuilder.parse(inputSource);
-        System.out.println(document.getLocalName());
+        BeanUtils.populate(new Person(),new HashMap());
     }
 
     @Test
     public void test11() throws Exception {
+        System.out.println("第十一个测试用例");
+
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+    }
+
+    @Test(description = "测试枚举类型的values返回枚举数组")
+    public void test12() throws Exception {
+        for (ColorEnum color : ColorEnum.values()) {
+            System.out.println(color);
+        }
+
+        System.out.println(Enum.valueOf(ColorEnum.class, "GREEN"));
+    }
+
+    @Test(description = "测试枚举工具类EnumSet的使用")
+    public void test13() throws Exception {
+        System.out.println("====allOf(Class<E> elementType)=====");
+        EnumSet<ColorEnum> set = EnumSet.allOf(ColorEnum.class);
+        pritSetElements(set);
+
+        System.out.println("====noneOf(Class<E> elementType)=====");
+        EnumSet<ColorEnum> set1 = EnumSet.noneOf(ColorEnum.class);
+        set1.addAll(set);
+        pritSetElements(set1);
+
+        System.out.println("===clone()======");
+        EnumSet<ColorEnum> clone = set.clone();
+        pritSetElements(clone);
+
+        System.out.println("====complementOf(EnumSet<E> s)=====");
+        EnumSet<ColorEnum> coldColor = EnumSet.of(ColorEnum.BLUE, ColorEnum.GREEN);
+        EnumSet<ColorEnum> noColdColor = EnumSet.complementOf(coldColor);
+        pritSetElements(noColdColor);
+
+        System.out.println("====range(E from, E to)=====");
+        EnumSet<ColorEnum> range = EnumSet.range(ColorEnum.RED, ColorEnum.BLUE);
+        pritSetElements(range);
+
+        System.out.println("====copyOf(EnumSet<E> s)=====");
+        EnumSet<ColorEnum> copyOf = EnumSet.copyOf(set);
+        pritSetElements(copyOf);
+
+        System.out.println("====copyOf(Collection<E> c)=====");
+        List<ColorEnum> list = Arrays.asList(ColorEnum.values());
+        EnumSet<ColorEnum> copyOf1 = EnumSet.copyOf(list);
+        pritSetElements(copyOf1);
+
+    }
+
+    private<T extends Collection> void pritSetElements(T t) {
+        for (Object aT : t) {
+            System.out.println(aT);
+        }
+    }
+
+    @Test(description = "测试枚举工具类EnumMap")
+    public void test14() throws Exception {
+        EnumMap<ColorEnum, String> enumMap = new EnumMap<ColorEnum, String>(ColorEnum.class);
+        enumMap.put(ColorEnum.RED, "红色");
+        enumMap.put(ColorEnum.BLUE, "蓝色");
+        enumMap.put(ColorEnum.GREEN, "绿色");
+
+        for (ColorEnum color : ColorEnum.values()) {
+            System.out.println(enumMap.get(color));
+        }
 
     }
 
@@ -189,6 +245,7 @@ public class PersonTest {
             line = br.readLine();
         }
 
+
         br.close();
 
     }
@@ -197,11 +254,7 @@ public class PersonTest {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         Set<Map.Entry<Integer, String>> entrySet = map.entrySet();
 
-        Iterator<Map.Entry<Integer, String>> iterator = entrySet.iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, String> entry = iterator.next();
-
+        for (Map.Entry<Integer, String> entry : entrySet) {
             bw.write(entry.getKey() + "=" + entry.getValue());
             bw.newLine();
         }
