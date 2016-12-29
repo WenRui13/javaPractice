@@ -218,6 +218,7 @@ public class PersonTest {
 
     }
 
+
     private<T extends Collection> void pritSetElements(T t) {
         for (Object aT : t) {
             System.out.println(aT);
@@ -237,6 +238,11 @@ public class PersonTest {
 
     }
 
+    @Test
+    public void test15() throws Exception {
+        System.out.println(ColorEnum.RED.getDesc());
+        System.out.println(ColorEnum.RED.getInfo());
+    }
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();
