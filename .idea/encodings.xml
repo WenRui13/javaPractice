@@ -3,6 +3,6 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$/src/main/java/ColorEnum.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/test/java/PersonTest.java" charset="UTF-8" />
-    <file url="PROJECT" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
