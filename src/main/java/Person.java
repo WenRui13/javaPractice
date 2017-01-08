@@ -1,9 +1,11 @@
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by yfxuxiaojun on 2016/9/21.
  */
-public class Person {
+public class Person implements Serializable,Cloneable {
+    private static final long serialVersionUID = -8396517822004869094L;
     private String name;
     private int age;
     private Date birthday;
@@ -39,5 +41,16 @@ public class Person {
                 ", age=" + age +
                 ", birthday=" + birthday +
                 '}';
+    }
+
+    @Override
+    protected Person clone()  {
+        Person person = null;
+        try {
+            person = (Person) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return person;
     }
 }

@@ -3,20 +3,26 @@ import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Source;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by yfxuxiaojun on 2016/9/21.
@@ -243,6 +249,79 @@ public class PersonTest {
         System.out.println(ColorEnum.RED.getDesc());
         System.out.println(ColorEnum.RED.getInfo());
     }
+
+    @Test(description = "序列化与反序列化对象")
+    public void test16() throws Exception {
+        System.out.println("创建一个对象");
+        Person person = new Person();
+        person.setAge(20);
+        person.setName("许小军");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        person.setBirthday(sf.parse("1985-10-15"));
+
+        System.out.println("序列化person对象到数组");
+        byte[] bytes = SerializationUtils.serialize(person);
+
+        System.out.println("保存到本地文件");
+        FileOutputStream outputStream = new FileOutputStream(new File("./hello.txt").getAbsoluteFile());
+
+        SerializationUtils.serialize(person, outputStream);
+    }
+
+    @Test
+    public void test17() throws Exception {
+        FileInputStream inputStream = new FileInputStream(new File("./hello.txt").getAbsoluteFile());
+        Person person = (Person) SerializationUtils.deserialize(inputStream);
+        System.out.println(person);
+    }
+
+    @Test
+    public void test18() throws Exception {
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL, Locale.CHINA);
+        String format1 = format.format(new Date());
+        System.out.println(format1);
+
+    }
+
+
+    @Test
+    public void test19() throws Exception {
+        double aDouble = RandomUtils.nextDouble()*100;
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.CHINA);
+        System.out.println(numberFormat.format(aDouble));
+
+    }
+
+    @Test
+    public void test20() throws Exception {
+        EnumMap<ColorEnum, String> enumMap = new EnumMap<ColorEnum, String>(ColorEnum.class);
+        EnumSet<ColorEnum> enumSet = EnumSet.allOf(ColorEnum.class);
+        ColorEnum[] values = ColorEnum.values();
+        for (ColorEnum colorEnum : values) {
+            enumMap.put(colorEnum, colorEnum.getInfo());
+        }
+        for (ColorEnum colorEnum : enumSet) {
+            enumMap.put(colorEnum, colorEnum.getDesc());
+        }
+
+        System.out.println(enumMap.containsKey(ColorEnum.BLUE));
+        System.out.println(enumMap.containsValue("红色"));
+        System.out.println(enumMap);
+
+    }
+
+    @Test
+    public void test21() throws Exception {
+        Person person = new Person();
+        person.setName("许小军");
+        person.setAge(20);
+        person.setBirthday(new Date());
+
+        Person person1 = person.clone();
+        System.out.println(person1);
+
+    }
+
     private void printFile(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();

@@ -2,6 +2,6 @@
  * Created by yfxuxiaojun on 2016/12/28.
  */
 public @interface NotNull {
-    String desc = "aaa";
+    String desc() default "aaaa";
 
 }
