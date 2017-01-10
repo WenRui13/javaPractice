@@ -5,7 +5,7 @@ import java.util.Date;
  * Created by yfxuxiaojun on 2016/9/21.
  */
 public class Person implements Serializable,Cloneable {
-    private static final long serialVersionUID = -8396517822004869094L;
+//    private static final long serialVersionUID = 6261603019483603153L;
     private String name;
     private int age;
     private Date birthday;

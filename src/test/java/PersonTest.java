@@ -1,3 +1,13 @@
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
+import net.lightbody.bmp.core.har.Har;
+import net.lightbody.bmp.filters.RequestFilter;
+import net.lightbody.bmp.util.HttpMessageContents;
+import net.lightbody.bmp.util.HttpMessageInfo;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -6,8 +16,14 @@ import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.java2d.pipe.ShapeSpanIterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -169,7 +185,7 @@ public class PersonTest {
 
     @Test(description = "test10")
     public void test10() throws Exception {
-        BeanUtils.populate(new Person(),new HashMap());
+        BeanUtils.populate(new Person(), new HashMap());
     }
 
     @Test
@@ -225,7 +241,7 @@ public class PersonTest {
     }
 
 
-    private<T extends Collection> void pritSetElements(T t) {
+    private <T extends Collection> void pritSetElements(T t) {
         for (Object aT : t) {
             System.out.println(aT);
         }
@@ -286,7 +302,7 @@ public class PersonTest {
 
     @Test
     public void test19() throws Exception {
-        double aDouble = RandomUtils.nextDouble()*100;
+        double aDouble = RandomUtils.nextDouble() * 100;
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.CHINA);
         System.out.println(numberFormat.format(aDouble));
 
@@ -320,6 +336,92 @@ public class PersonTest {
         Person person1 = person.clone();
         System.out.println(person1);
 
+    }
+
+    @Test
+    public void test22() throws Exception {
+        // start the proxy
+        BrowserMobProxyServer server = new BrowserMobProxyServer();
+
+        server.start();
+
+        // get the Selenium proxy object
+        Proxy seleniumProxy = ClientUtil.createSeleniumProxy(server);
+
+        // configure it as a desired capability
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
+
+        // start the browser up
+        WebDriver driver = new FirefoxDriver(capabilities);
+        driver.manage().window().maximize();
+        // set test url and cookie which is copied from browser.
+        String testUrl = "http://prom.shop.jd.net/promotion/info/info2_queryActivitys.action?__vender_id=58725&pageView.evtType=1";
+        final String cookieValue = "__jda=248191580.14828136823411804450879.1482813682.1482984178.1483087292.5; __jdv=248191580%7Cdirect" +
+                "%7C-%7Cnone%7C-%7C1483087292009; __jdu=ed091c6a-a95a-4871-84a0-8788fd142e68; _pst=test_fbp_smd2; pin" +
+                "=test_fbp_smd2; unick=test_fbp_smd2; _tp=YMDNxagB2%2BBXSTg%2BeRaWGA%3D%3D; TrackID=1MlejGWPUo091ow2kAA6AEK13AeMBcKJNMTp3dMglURg4xejUVpNCOk6U4LQ2Pkp_-rtMWN8kNig1DccW0nNv3cHnB0QtcVnAT77SzS5X7bQ" +
+                "; pinId=7_QQtS9Lt59dSs1P4UbBrw; _jrda=3; ceshi3.com=4B4C76F75C02AD1D5E02D0222AA88801F9D29175657D28FD" +
+                "99C9513299E68CEDE8550FF83D3EEA3B4F0B6B2DBB6A80D710C38D68C2DE2730BFDB277B7BFEE30B44F7491E093F5529B31F" +
+                "3A65385668EED789F822D9FFC428FA7CB49DEAD89AF4A9A4290ED087F74BBCE7433A54907FAE75E615F5D971D8A88AF34FF405371CAA30E6468958F27C5117E1291244B10996" +
+                "; logining=1; _vender_=XIS4VVGW4FROFQ65XGJM4LR3RSRO4XRPUXZD7O7OHWXJDNRA7JTNLKGYJKURVD3CKNU3PTHZUZRA3" +
+                "ERLTHRKL6YUQS2QMYERKDVREKJXXJBWKPKT4SLFZEHOLHETWBDTO2EU5D4U2RCWBIKND7PWTVEXBTL6JE6WIZYH5A6SJWBMYS3SX" +
+                "2F2VWNQQ63R2TKSY4AZ4MENLFM4Y6ALKKKMQUAM5BNCXO3O5PLR5BVDKRHUXR2JUDYZ3J2CYB6TTITDGVYDRQZO22USJDLXGVTYZ" +
+                "KENYV4HP2CNOTBYZ2ZK2EPY6CYZQOVODDYM34HCDGZV4YTIMQQ2JDOXHIU33AEODJYSAH7NRQZTWQXF3QN6UJKHHFCUHK4HX24R2" +
+                "EUSNHUCBX3XF6YONJANORE3KEAW6BEX2F3CFU5FH533PBA"; //登录后获取请求中cookie的那长串内容
+        server.addRequestFilter(new RequestFilter() {
+            @Override
+            public HttpResponse filterRequest(HttpRequest request, HttpMessageContents contents, HttpMessageInfo messageInfo) {
+                request.headers().add("Cookie", cookieValue);
+                return null;
+            }
+        });
+        driver.get(testUrl);
+        Thread.sleep(10000);
+        driver.quit();
+        server.stop();
+    }
+
+
+    @Test
+    public void testBmp_1() throws Exception {
+        BrowserMobProxy proxy = new BrowserMobProxyServer();
+        proxy.start();
+        int port = proxy.getPort();
+
+        Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(CapabilityType.PROXY, seleniumProxy);
+        WebDriver driver = new FirefoxDriver(capabilities);
+        System.out.println("Port started:" + port);
+
+        String testUrl = "http://prom.shop.jd.com/promotion/info/info2_queryActivitys.action";
+        final String cookieValue = "__jdu=1484047281712572965388; erp1.jd.com=18607A30C86DFF8DDDD476F4015C717501360402B91419F75D6444163F" +
+                "B33530491CF0D42EE10DB78732D48224E16CF2008228C7C629B2A97874CA346520AE07A5C0044E41C396944401AC26DC56B382C10E900E5E8CE6B168F4971416FD29F2" +
+                "; __jda=122270672.1484047281712572965388.1484047282.1484047282.1484047282.1; __jdb=122270672.1.1484047281712572965388" +
+                "|1.1484047282; __jdc=122270672; __jdv=122270672|direct|-|none|-|1484047281758; 3AB9D23F7A4B3C9B=LNBPXE537WZNCJU3YGU5BL5KKQSC4NIVYTR4TMXRYCQFL5WMMHODKUNOPEWVJALEVWG5FANOSGQ62ZXZ7F4O5LRKD4" +
+                "; _jrda=1; _jrdb=1484047282202; TrackID=1tx3s9TA30mgRrY9sSmyKHforGyR87ZS9JcsV2jzVOLG0_H4H24gUhJ4A_p89l6FT6ZZhER3fOzYDEa3UZiAWrQV6ybE555E2Hu2vCm6KXOI" +
+                "; pinId=pVvgI0wl9Kj30k3e9u7OvQ; pin=test_pop_sop01; thor=8D773357DE4B1262E9D9589251555952402FA3355B2" +
+                "5D0A45EE63D64D7C2BB817137DDA454E90819FDB0725373104C0BA62C894067FCA235256C5EBDF3E0F5D42C933E5AB41098A" +
+                "7CC39A9B04B645C657ABDB134DBFD608DE2CE68F93151EBEFB93DE712A56DBC9825A691B08F97CCF55FAD595FFDB365C02D135F32033AEC56B73151C916665F049E9D0B095E6EFBBC" +
+                "; _tp=eC2QtosdwG106sIRKR64AQ%3D%3D; logining=1; _pst=test_pop_sop01; ceshi3.com=2002fCLT34SOTIuS5OlJ55F-NDdkgFxv7CWUxheQ350" +
+                "; _vender_=VOGSX64M3JVSAF7GGR7SK77P2BYK562ZVZJIHKND2MLR4QMHDNAQLPMTKJILMAPLW2E723QH2UEKOUYXTBVMMNAD4" +
+                "TIKZ3YLDQ7B5HQK4PMO6EEQLM2YAXH35DEYQSMDKEG7LYPBDGQ4OTRAYDG2RSQQXOHR5M3UPO3ZTUKOEDAM3KGKCC54LKCZWOL6T" +
+                "SZAZSJIPTDBKCUARUW3N22UF32DLFLEIQGVO2W55J6AKPPBT227XA5NO4S3NFVIUUUADGOYH56T72MTMNTP5AAMDRLULPTG62GGT" +
+                "55FZ4EXAHVVHY2HYTUFB7U4PQL7NGJFCJ6F2RFPQZMU6ZNR7LLUY3SOG2AERCQH4RXS2MWOBJP7LFD5OJONF4FHVK6LHPYAJQIRCQ6CBPOXLMNEN6QF3WFILXLOXJFQWTFRZEK3FCL3BLRV4UO67YCXPG2FAGLX" +
+                "; _lvtc_=W2E723QH2UEKOCDMUMBL2E24QU";
+        proxy.addRequestFilter(new RequestFilter() {
+            @Override
+            public HttpResponse filterRequest(HttpRequest httpRequest, HttpMessageContents httpMessageContents, HttpMessageInfo httpMessageInfo) {
+                httpRequest.headers().add("Cookie", cookieValue);
+                return null;
+            }
+        });
+
+        driver.get(testUrl);
+        Thread.sleep(10000);
+        driver.quit();
+        proxy.stop();
     }
 
     private void printFile(File file) throws IOException {
